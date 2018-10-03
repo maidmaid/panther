@@ -66,7 +66,7 @@ final class ChromeManager implements BrowserManagerInterface
 
     private function findChromeDriverBinary(): string
     {
-        if ($binary = $_SERVER['PANTHER_CHROME_DRIVER_BINARY'] ?? null) {
+        if ($binary = $_ENV['PANTHER_CHROME_DRIVER_BINARY'] ?? null) {
             return $binary;
         }
 
@@ -83,17 +83,17 @@ final class ChromeManager implements BrowserManagerInterface
     private function getDefaultArguments(): array
     {
         // Enable the headless mode unless PANTHER_NO_HEADLESS is defined
-        $args = ($_SERVER['PANTHER_NO_HEADLESS'] ?? false) ? [] : ['--headless', 'window-size=1200,1100', '--disable-gpu'];
+        $args = ($_ENV['PANTHER_NO_HEADLESS'] ?? false) ? [] : ['--headless', 'window-size=1200,1100', '--disable-gpu'];
 
         // Disable Chrome's sandbox if PANTHER_NO_SANDBOX is defined or if running in Travis
-        if ($_SERVER['PANTHER_NO_SANDBOX'] ?? $_SERVER['HAS_JOSH_K_SEAL_OF_APPROVAL'] ?? false) {
+        if ($_ENV['PANTHER_NO_SANDBOX'] ?? $_ENV['HAS_JOSH_K_SEAL_OF_APPROVAL'] ?? false) {
             // Running in Travis, disabling the sandbox mode
             $args[] = '--no-sandbox';
         }
 
         // Add custom arguments with PANTHER_CHROME_ARGUMENTS
-        if ($_SERVER['PANTHER_CHROME_ARGUMENTS'] ?? false) {
-            $arguments = explode(' ', $_SERVER['PANTHER_CHROME_ARGUMENTS']);
+        if ($_ENV['PANTHER_CHROME_ARGUMENTS'] ?? false) {
+            $arguments = explode(' ', $_ENV['PANTHER_CHROME_ARGUMENTS']);
             $args = array_merge($args, $arguments);
         }
 
