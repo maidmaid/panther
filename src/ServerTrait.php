@@ -29,4 +29,15 @@ trait ServerTrait
     {
         PantherTestCase::stopWebServer();
     }
+
+    private function pause($message): void
+    {
+        if (PantherTestCase::isWebServerStarted()
+            && \in_array('--debug', $_SERVER['argv'])
+            && getenv('PANTHER_NO_HEADLESS')
+        ) {
+            echo "$message\n\nPress enter to continue...";
+            fgets(STDIN);
+        }
+    }
 }
